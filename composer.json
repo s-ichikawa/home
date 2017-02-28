@@ -1,0 +1,13 @@
+{
+    "name": "s-ichikawa/home",
+    "description": "my home page",
+    "authors": [
+        {
+            "name": "s-ichikawa",
+            "email": "ichikawa.shingo.0829@gmail.com"
+        }
+    ],
+    "require": {
+        "monolog/monolog": "^1.22"
+    }
+}
