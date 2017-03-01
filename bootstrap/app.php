@@ -1,12 +1,4 @@
 <?php
+require_once __DIR__ . '/autoload.php';
 
-class Application
-{
-
-    public function run()
-    {
-        echo 'Hello World!!';
-    }
-}
-
-return new Application();
+return new \Sichikawa\Home\Core\Application();
