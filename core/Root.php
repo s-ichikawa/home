@@ -7,12 +7,19 @@ use Sichikawa\Home\Core\Exceptions\NotFoundException;
 class Root
 {
 
+    /**
+     * Root constructor.
+     */
+    public function __construct()
+    {
+        $this->uri = $_SERVER['REQUEST_URI'];
+    }
+
     public function call()
     {
         $method = $_SERVER['REQUEST_METHOD'];
-        $uri = $_SERVER['REQUEST_URI'];
 
-        $filename = pathinfo($uri, PATHINFO_FILENAME);
+        $filename = pathinfo($this->uri, PATHINFO_FILENAME);
         $controller_name = "Sichikawa\\Home\\App\\Controllers\\" . ucfirst(($filename ?: 'index') . 'Controller');
 
         if (!class_exists($controller_name)) {
