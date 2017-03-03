@@ -1,7 +1,9 @@
 <?php
 namespace Sichikawa\Home\App\Controllers;
 
-class IndexController
+use Sichikawa\Home\Core\Controller;
+
+class IndexController extends Controller
 {
 
     public function get()

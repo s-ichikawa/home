@@ -2,33 +2,27 @@
 namespace Sichikawa\Home\Core;
 
 
-use Sichikawa\Home\Core\Exceptions\NotFoundException;
-
 class Application
 {
+    public $app = [];
+
+    public function __construct()
+    {
+        $this->app['root'] = new Root();
+    }
 
     public function handle()
     {
-        $this->root();
+        $root = $this->get('root');
+        $root->call();
     }
 
-    public function root()
+    /**
+     * @param $name
+     * @return mixed
+     */
+    public function get($name)
     {
-        $method = $_SERVER['REQUEST_METHOD'];
-        $uri = $_SERVER['REQUEST_URI'];
-
-        $filename = pathinfo($uri, PATHINFO_FILENAME);
-        $controller_name = "Sichikawa\\Home\\App\\Controllers\\" . ucfirst(($filename ?: 'index') . 'Controller');
-
-        if (!class_exists($controller_name)) {
-            throw new NotFoundException();
-        }
-
-        $controller = new $controller_name();
-        if (!method_exists($controller, $method)) {
-            throw new NotFoundException();
-        }
-
-        echo $controller->$method();
+        return $this->app[$name];
     }
 }
