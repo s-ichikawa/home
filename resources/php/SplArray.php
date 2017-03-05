@@ -2,7 +2,7 @@
 
 ini_set('memory_limit', '2024M');
 
-for($size = 5; $size < 100000; $size *= 2) {
+for($size = 5; $size < 20000; $size *= 2) {
     echo '<br>' . "Testing size: $size" . '<br>';
 
     unset($container);
