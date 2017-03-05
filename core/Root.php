@@ -17,6 +17,18 @@ class Root
 
     public function call()
     {
+
+        if ($raw_php = $this->getRawPhp()) {
+
+        }
+
+        if (list($controller, $method) = $this->getController()) {
+            return $controller->$method();
+        }
+    }
+
+    private function getController()
+    {
         $method = $_SERVER['REQUEST_METHOD'];
 
         $filename = pathinfo($this->uri, PATHINFO_FILENAME);
@@ -31,8 +43,19 @@ class Root
             throw new NotFoundException();
         }
 
-        echo $controller->$method();
+        return [$controller, $method];
     }
 
+    private function getRawPhp()
+    {
+        $filename = pathinfo($this->uri, PATHINFO_FILENAME);
+
+        $php = new \SplFileObject(__DIR__ . '/../resources/php/' . $filename . '.php');
+
+        if ($php->valid()) {
+            require __DIR__ . '/../resources/php/' . $filename . '.php';
+            exit();
+        }
+    }
 
 }
