@@ -18,5 +18,5 @@ $stack->add(0, 2);
 
 var_dump($stack);
 foreach ($stack as $value) {
-    echo $value . ',';
+    echo $value . '<br>';
 }
