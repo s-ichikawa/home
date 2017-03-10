@@ -18,13 +18,13 @@ class Root
     public function call()
     {
 
-        if ($raw_php = $this->getRawPhp()) {
-
-        }
+        $this->getRawPhp();
 
         if (list($controller, $method) = $this->getController()) {
-            return $controller->$method();
+            $controller->$method();
         }
+
+        throw new NotFoundException();
     }
 
     private function getController()
@@ -50,10 +50,10 @@ class Root
     {
         $filename = pathinfo($this->uri, PATHINFO_FILENAME);
 
-        $php = new \SplFileObject(__DIR__ . '/../resources/php/' . $filename . '.php');
+        $path = __DIR__ . '/../resources/php/' . $filename . '.php';
 
-        if ($php->valid()) {
-            require __DIR__ . '/../resources/php/' . $filename . '.php';
+        if (file_exists($path) && is_readable($path)) {
+            require $path;
             exit();
         }
     }
