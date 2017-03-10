@@ -2,26 +2,15 @@
 namespace Sichikawa\Home\App\Controllers;
 
 use Sichikawa\Home\Core\Controller;
+use Sichikawa\Home\Core\View;
 
 class IndexController extends Controller
 {
 
     public function get()
     {
-        $this->limitIterator();
+        $view = new View();
+        $view->render('index');
     }
 
-    private function limitIterator()
-    {
-        $array = new \ArrayIterator([
-            'a' => 'hoge',
-            0 => 'zero',
-            'b' => 'foo',
-            1 => 'bar',
-        ]);
-
-        foreach (new \LimitIterator($array, 1, 2) as $key => $val) {
-            var_dump($key . ':' . $val);
-        }
-    }
 }

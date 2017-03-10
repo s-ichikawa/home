@@ -24,7 +24,6 @@ class Root
             $controller->$method();
         }
 
-        throw new NotFoundException();
     }
 
     private function getController()
