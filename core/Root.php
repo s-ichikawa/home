@@ -6,6 +6,7 @@ use Sichikawa\Home\Core\Exceptions\NotFoundException;
 
 class Root
 {
+    private $paths;
 
     /**
      * Root constructor.
@@ -49,12 +50,17 @@ class Root
     {
         $filename = pathinfo($this->uri, PATHINFO_FILENAME);
 
-        $path = __DIR__ . '/../resources/php/' . $filename . '.php';
+        $path = resources_path('php/' . $filename . '.php');
 
         if (file_exists($path) && is_readable($path)) {
-            require $path;
+            include $path;
             exit();
         }
+    }
+
+    public function add($method, $path, $handler)
+    {
+        $this->paths[] = [$method, $path, $handler];
     }
 
 }
