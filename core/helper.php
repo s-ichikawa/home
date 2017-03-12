@@ -30,13 +30,15 @@ if (!function_exists('resources_path')) {
     }
 }
 
+function root()
+{
+    static $root;
+    return $root ?? $root = new \Sichikawa\Home\Core\Root();
+
+}
 
 function add_root($method, $path, $handler) {
-    static $root;
-    if (empty($root)) {
-        $root = new \Sichikawa\Home\Core\Root();
-    }
-    $root->add($method, $path, $handler);
+    root()->add($method, $path, $handler);
 };
 
 function add_get($path, $handler) {

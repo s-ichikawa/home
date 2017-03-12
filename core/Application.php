@@ -10,7 +10,8 @@ class Application
     {
 
         require_once __DIR__ . '/../config/root.php';
-        $this->app['root'] = new Root();
+
+        $this->app['root'] = root();
     }
 
     public function handle()
