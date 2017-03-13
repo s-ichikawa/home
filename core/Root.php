@@ -28,7 +28,7 @@ class Root
 
         $controller_name = $handler;
         if ($this->isController($controller_name)) {
-            return (new $handler)->{$this->method}();
+            return (new $handler())->{$this->method}();
         }
 
         $path = resources_path('php/' . $this->getFileName() . '.php');
@@ -52,7 +52,8 @@ class Root
 
     private function getFileName()
     {
-        return pathinfo($this->uri, PATHINFO_FILENAME) ?: 'index';
+        $filename = pathinfo($this->uri, PATHINFO_FILENAME);
+        return preg_replace('/\?.*/', '', $filename) ?: 'index';
     }
 
     public function add($method, $path, $handler)
