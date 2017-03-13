@@ -42,5 +42,5 @@ function add_root($method, $path, $handler) {
 };
 
 function add_get($path, $handler) {
-    add_root('get', $path, $handler);
+    add_root('GET', $path, $handler);
 }

@@ -17,7 +17,7 @@ class Application
     public function handle()
     {
         $root = $this->get('root');
-        $root->call();
+        echo $root->call();
     }
 
     /**
