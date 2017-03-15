@@ -6,41 +6,34 @@ class Request
 {
     public function get($key = null, $default = null)
     {
-        if (empty($key)) {
-            return $_GET;
-        }
-        return $_GET[$key] ?? $default;
+        return $this->getVal($_GET, $key, $default);
     }
 
     public function post($key = null, $default = null)
     {
-        if (empty($key)) {
-            return $_POST;
-        }
-        return $_POST[$key] ?? $default;
+        return $this->getVal($_POST, $key, $default);
     }
 
     public function files($key = null, $default = null)
     {
-        if (empty($key)) {
-            return $_FILES;
-        }
-        return $_FILES[$key] ?? $default;
+        return $this->getVal($_FILES, $key, $default);
     }
 
     public function cookie($key = null, $default = null)
     {
-        if (empty($key)) {
-            return $_COOKIE;
-        }
-        return $_COOKIE[$key] ?? $default;
+        return $this->getVal($_COOKIE, $key, $default);
     }
 
     public function server($key = null, $default = null)
     {
+        return $this->getVal($_SERVER, $key, $default);
+    }
+
+    private function getVal($request, $key = null, $default = null)
+    {
         if (empty($key)) {
-            return $_SERVER;
+            return $request;
         }
-        return $_SERVER[$key] ?? $default;
+        return $request[$key] ?? $default;
     }
 }
