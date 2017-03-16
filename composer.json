@@ -11,6 +11,9 @@
         "monolog/monolog": "^1.22",
         "twig/twig": "^2.2"
     },
+    "require-dev": {
+        "devster/ubench": "^1.2"
+    },
     "autoload": {
         "psr-4": {
             "Sichikawa\\Home\\Core\\": "core/",

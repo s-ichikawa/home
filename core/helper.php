@@ -44,3 +44,8 @@ function add_root($method, $path, $handler) {
 function add_get($path, $handler) {
     add_root('GET', $path, $handler);
 }
+
+function add_post($path, $handler)
+{
+    add_root('POST', $path, $handler);
+}

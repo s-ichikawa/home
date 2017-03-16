@@ -15,4 +15,8 @@ class IndexController extends Controller
         $view->render('index');
     }
 
+    public function post()
+    {
+        echo 'Yes POST';
+    }
 }

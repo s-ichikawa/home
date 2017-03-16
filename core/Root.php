@@ -42,6 +42,9 @@ class Root
 
     private function isController($name)
     {
+        if (!isset($this->paths[$this->method][$this->getFileName()])) {
+            return null;
+        }
         return class_exists($name) && method_exists(new $name, $this->method);
     }
 

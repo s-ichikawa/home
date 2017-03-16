@@ -5,3 +5,5 @@ add_get('index', function() {
 });
 
 add_get('controller', \Sichikawa\Home\App\Controllers\IndexController::class);
+
+add_post('controller', \Sichikawa\Home\App\Controllers\IndexController::class);
