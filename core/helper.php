@@ -33,7 +33,12 @@ if (!function_exists('resources_path')) {
 function route()
 {
     static $route;
-    return $route ?? $route = new \Sichikawa\Home\Core\Route();
+    if ($route) {
+        return $route;
+    }
+    $uri = $_SERVER['REQUEST_URI'];
+    $method = $_SERVER['REQUEST_METHOD'];
+    return $route = new \Sichikawa\Home\Core\Route($uri, $method);
 
 }
 

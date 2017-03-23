@@ -3,13 +3,24 @@ namespace Sichikawa\Home\Core;
 
 class Controller
 {
-    protected $request;
+    /**
+     * @return Request
+     */
+    public function getRequest(): Request
+    {
+        return $this->request;
+    }
 
     /**
-     * Controller constructor.
+     * @param Request $request
      */
-    public function __construct()
+    public function setRequest(Request $request)
     {
-        $this->request = new Request();
+        $this->request = $request;
     }
+    /**
+     * @var Request
+     */
+    protected $request;
+
 }

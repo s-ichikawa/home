@@ -12,11 +12,13 @@ class Route
 
     /**
      * Route constructor.
+     * @param $uri
+     * @param $method
      */
-    public function __construct()
+    public function __construct($uri, $method)
     {
-        $this->uri = $_SERVER['REQUEST_URI'];
-        $this->method = $_SERVER['REQUEST_METHOD'];
+        $this->uri = $uri;
+        $this->method = $method;
     }
 
     public function call()
@@ -28,7 +30,9 @@ class Route
 
         $controller_name = $handler;
         if ($this->isController($controller_name)) {
-            return (new $handler())->{$this->method}();
+            $controller = $this->getController($handler);
+            $controller->setRequest(new Request());
+            return $controller->{$this->method}();
         }
 
         $path = resources_path('php/' . $this->getFileName() . '.php');
@@ -38,6 +42,15 @@ class Route
         }
 
         throw new NotFoundException();
+    }
+
+    /**
+     * @param $name
+     * @return Controller
+     */
+    private function getController($name)
+    {
+        return new $name();
     }
 
     private function isController($name)

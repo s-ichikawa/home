@@ -9,10 +9,10 @@ class IndexController extends Controller
 
     public function get()
     {
-        echo $this->request->get('test');
+        var_dump($this->getRequest()->get('test'));
 
-        $view = new View();
-        $view->render('index');
+//        $view = new View();
+//        $view->render('index');
     }
 
     public function post()
