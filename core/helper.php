@@ -42,12 +42,12 @@ function route()
 
 }
 
-function add_route($method, $path, $handler) {
-    route()->add($method, $path, $handler);
+function add_route($method, $path, $handler, $function = null) {
+    route()->add($method, $path, $handler, $function);
 };
 
-function add_get($path, $handler) {
-    add_route('GET', $path, $handler);
+function add_get($path, $handler, $method = null) {
+    add_route('GET', $path, $handler, $method);
 }
 
 function add_post($path, $handler)

@@ -72,9 +72,13 @@ class Route
         return preg_replace('/\?.*/', '', $filename) ?: 'index';
     }
 
-    public function add($method, $path, $handler)
+    public function add($method, $path, $handler, $function = null)
     {
-        $this->paths[$method][$path] = $handler;
+        if ($function) {
+            $this->paths[$method][$path][$function] = $handler;
+        } else {
+            $this->paths[$method][$path] = $handler;
+        }
     }
 
     private function find()
