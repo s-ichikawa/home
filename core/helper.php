@@ -32,6 +32,8 @@ if (!function_exists('resources_path')) {
 
 function route()
 {
+    static $root;
+    return $root ?? $root = new \Sichikawa\Home\Core\Route();
     static $route;
     return $route ?? $route = new \Sichikawa\Home\Core\Route();
 
