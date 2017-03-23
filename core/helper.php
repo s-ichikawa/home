@@ -33,7 +33,7 @@ if (!function_exists('resources_path')) {
 function root()
 {
     static $root;
-    return $root ?? $root = new \Sichikawa\Home\Core\Root();
+    return $root ?? $root = new \Sichikawa\Home\Core\Route();
 
 }
 
