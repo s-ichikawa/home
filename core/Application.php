@@ -9,15 +9,15 @@ class Application
     public function __construct()
     {
 
-        require_once __DIR__ . '/../config/root.php';
+        require_once __DIR__ . '/../config/route.php';
 
-        $this->app['root'] = root();
+        $this->app['route'] = route();
     }
 
     public function handle()
     {
-        $root = $this->get('root');
-        echo $root->call();
+        $route = $this->get('route');
+        echo $route->call();
     }
 
     /**

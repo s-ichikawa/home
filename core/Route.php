@@ -4,14 +4,14 @@ namespace Sichikawa\Home\Core;
 
 use Sichikawa\Home\Core\Exceptions\NotFoundException;
 
-class Root
+class Route
 {
     private $paths;
 
     private $method;
 
     /**
-     * Root constructor.
+     * Route constructor.
      */
     public function __construct()
     {

@@ -30,22 +30,22 @@ if (!function_exists('resources_path')) {
     }
 }
 
-function root()
+function route()
 {
-    static $root;
-    return $root ?? $root = new \Sichikawa\Home\Core\Root();
+    static $route;
+    return $route ?? $route = new \Sichikawa\Home\Core\Route();
 
 }
 
-function add_root($method, $path, $handler) {
-    root()->add($method, $path, $handler);
+function add_route($method, $path, $handler) {
+    route()->add($method, $path, $handler);
 };
 
 function add_get($path, $handler) {
-    add_root('GET', $path, $handler);
+    add_route('GET', $path, $handler);
 }
 
 function add_post($path, $handler)
 {
-    add_root('POST', $path, $handler);
+    add_route('POST', $path, $handler);
 }
