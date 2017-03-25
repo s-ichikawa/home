@@ -28,11 +28,18 @@ class Route
             return $handler();
         }
 
-        $controller_name = $handler;
+        $function = null;
+        if (is_array($handler)) {
+            $keys = array_keys($handler);
+            $function = array_shift($keys);
+            $controller_name = array_shift($handler);
+        } else {
+            $controller_name = $handler;
+        }
         if ($this->isController($controller_name)) {
-            $controller = $this->getController($handler);
+            $controller = $this->getController($controller_name);
             $controller->setRequest(new Request());
-            return $controller->{$this->method}();
+            return $controller->{$function ?:$this->method}();
         }
 
         $path = resources_path('php/' . $this->getFileName() . '.php');

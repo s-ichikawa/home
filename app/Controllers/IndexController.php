@@ -16,4 +16,9 @@ class IndexController extends Controller
     {
         echo 'Yes POST';
     }
+
+    public function test()
+    {
+        echo __FUNCTION__ . '!!!';
+    }
 }
