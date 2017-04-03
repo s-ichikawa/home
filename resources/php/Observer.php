@@ -4,7 +4,7 @@ class MyObserver1 implements SplObserver
 {
     public function update(SplSubject $subject)
     {
-        echo __CLASS__ . ' - ' . $subject->getName();
+        echo __CLASS__ . ' - ' . $subject->getName() . PHP_EOL;
     }
 }
 
@@ -12,7 +12,7 @@ class MyObserver2 implements SplObserver
 {
     public function update(SplSubject $subject)
     {
-        echo __CLASS__ . ' - ' . $subject->getName();
+        echo __CLASS__ . ' - ' . $subject->getName() . PHP_EOL;
     }
 }
 
@@ -57,4 +57,7 @@ $subject = new MySubject("test");
 
 $subject->attach($observer1);
 $subject->attach($observer2);
+$subject->notify();
+
+$subject->detach(new MyObserver1());
 $subject->notify();
