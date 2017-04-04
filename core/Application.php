@@ -4,7 +4,7 @@ namespace Sichikawa\Home\Core;
 
 class Application
 {
-    public $app = [];
+    protected $app = [];
 
     public function __construct()
     {
@@ -15,15 +15,14 @@ class Application
 
     public function handle()
     {
-        $route = $this->get('route');
-        echo $route->call();
+        echo $this->getApp('route')->call();
     }
 
     /**
      * @param $name
      * @return mixed
      */
-    public function get($name)
+    public function getApp($name)
     {
         return $this->app[$name];
     }
