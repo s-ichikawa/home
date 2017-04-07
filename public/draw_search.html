@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Simple Map</title>
+  <meta name="viewport" content="initial-scale=1.0">
+  <meta charset="utf-8">
+  <style>
+
+    /* Optional: Makes the sample page fill the window. */
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="c" style="border:1px solid;"></canvas>
+<button id="draw">draw</button>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript" src="./js/fabric.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var canvas = new fabric.Canvas('c');
+        canvas.setHeight(500);
+        canvas.setWidth(500);
+
+        $('#draw').click(function (event) {
+            canvas.isDrawingMode = !canvas.isDrawingMode;
+        });
+    });
+</script>
+</body>
+</html>
