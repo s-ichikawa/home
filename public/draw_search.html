@@ -23,12 +23,38 @@
 <script type="text/javascript" src="./js/fabric.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
-        var canvas = new fabric.Canvas('c');
+        var canvas = new fabric.Canvas('c'),
+            draw_area = $('#draw');
         canvas.setHeight(500);
         canvas.setWidth(500);
 
-        $('#draw').click(function (event) {
+        draw_area.click(function (event) {
             canvas.isDrawingMode = !canvas.isDrawingMode;
+        });
+
+        var start_x = 0, start_y = 0, end_x = 0, end_y = 0;
+        canvas.on('mouse:down', function (e) {
+            if (canvas.isDrawingMode) {
+                var pointer = canvas.getPointer(e.e);
+                start_x = pointer.x;
+                start_y = pointer.y;
+            }
+        });
+
+        canvas.on('mouse:up', function (e) {
+            if (canvas.isDrawingMode) {
+                var pointer = canvas.getPointer(e.e);
+                end_x = pointer.x;
+                end_y = pointer.y;
+
+                console.log(start_x, start_y, end_x, end_y);
+                var line = new fabric.Line([start_x, start_y, end_x, end_y], {
+                    stroke: 'black',
+                });
+
+                console.log(canvas._objects[0]);
+                canvas.add(line);
+            }
         });
     });
 </script>
