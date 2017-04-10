@@ -11,15 +11,18 @@
             margin: 0;
             padding: 0;
         }
+        #map {
+            height: 500px;
+            width: 500px;
+        }
     </style>
 </head>
 <body>
-
+<div id="map"></div>
 <canvas id="c" style="border:1px solid;"></canvas>
 <button id="draw">draw</button>
-
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script type="text/javascript" src="./js/fabric.min.js"></script>
+<script type="text/javascript" src="/js/fabric.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         var canvas = new fabric.Canvas('c'),
@@ -59,7 +62,17 @@
                 console.log(points);
             }
         });
+
+
     });
+    var map;
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: -34.397, lng: 150.644},
+            zoom: 8
+        });
+    }
 </script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ key }}&callback=initMap" async defer></script>
 </body>
 </html>

@@ -22,8 +22,11 @@ class IndexController extends Controller
         echo __FUNCTION__;
     }
 
-    public function test()
+    public function draw_search()
     {
-        echo __FUNCTION__ . '!!!';
+        $config = require(base_path('.env.php'));
+        (new View())->render('draw_search', [
+            'key' => $config['GOOGLE_MAP_KEY']
+        ]);
     }
 }
