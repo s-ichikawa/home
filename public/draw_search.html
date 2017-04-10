@@ -1,19 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Simple Map</title>
-  <meta name="viewport" content="initial-scale=1.0">
-  <meta charset="utf-8">
-  <style>
-
-    /* Optional: Makes the sample page fill the window. */
-    html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-    }
-  </style>
-</head>
 <body>
 
 <canvas id="c" style="border:1px solid;"></canvas>
@@ -24,36 +8,40 @@
 <script type="text/javascript">
     $(document).ready(function () {
         var canvas = new fabric.Canvas('c'),
-            draw_area = $('#draw');
+            drawing = false,
+            points = [];
         canvas.setHeight(500);
         canvas.setWidth(500);
-
-        draw_area.click(function (event) {
+        $('#draw').click(function () {
             canvas.isDrawingMode = !canvas.isDrawingMode;
         });
-
         var start_x = 0, start_y = 0, end_x = 0, end_y = 0;
         canvas.on('mouse:down', function (e) {
             if (canvas.isDrawingMode) {
+                drawing = true;
                 var pointer = canvas.getPointer(e.e);
                 start_x = pointer.x;
                 start_y = pointer.y;
             }
         });
-
+        canvas.on('mouse:move', function(e) {
+            if (drawing) {
+                var pointer = canvas.getPointer(e.e);
+                points.push({x: pointer.x, y: pointer.y})
+            }
+        });
         canvas.on('mouse:up', function (e) {
             if (canvas.isDrawingMode) {
+                drawing = false;
                 var pointer = canvas.getPointer(e.e);
                 end_x = pointer.x;
                 end_y = pointer.y;
-
-                console.log(start_x, start_y, end_x, end_y);
                 var line = new fabric.Line([start_x, start_y, end_x, end_y], {
-                    stroke: 'black',
+                    stroke: 'black'
                 });
-
-                console.log(canvas._objects[0]);
                 canvas.add(line);
+                points.push({x: pointer.x, y: pointer.y});
+                console.log(points);
             }
         });
     });
