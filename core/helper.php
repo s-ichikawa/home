@@ -54,3 +54,8 @@ function add_post($path, $handler)
 {
     add_route('POST', $path, $handler);
 }
+
+function test()
+{
+
+}
