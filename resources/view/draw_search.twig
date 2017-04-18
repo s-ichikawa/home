@@ -11,6 +11,7 @@
             margin: 0;
             padding: 0;
         }
+
         #map {
             height: 500px;
             width: 500px;
@@ -24,53 +25,84 @@
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript" src="/js/fabric.min.js"></script>
 <script type="text/javascript">
-    $(document).ready(function () {
-        var canvas = new fabric.Canvas('c'),
-            drawing = false,
-            points = [];
-        canvas.setHeight(500);
-        canvas.setWidth(500);
-        $('#draw').click(function () {
-            canvas.isDrawingMode = !canvas.isDrawingMode;
-        });
-        var start_x = 0, start_y = 0, end_x = 0, end_y = 0;
-        canvas.on('mouse:down', function (e) {
-            if (canvas.isDrawingMode) {
-                drawing = true;
-                var pointer = canvas.getPointer(e.e);
-                start_x = pointer.x;
-                start_y = pointer.y;
-            }
-        });
-        canvas.on('mouse:move', function(e) {
-            if (drawing) {
-                var pointer = canvas.getPointer(e.e);
-                points.push({x: pointer.x, y: pointer.y})
-            }
-        });
-        canvas.on('mouse:up', function (e) {
-            if (canvas.isDrawingMode) {
-                drawing = false;
-                var pointer = canvas.getPointer(e.e);
-                end_x = pointer.x;
-                end_y = pointer.y;
-                var line = new fabric.Line([start_x, start_y, end_x, end_y], {
-                    stroke: 'black'
-                });
-                canvas.add(line);
-                points.push({x: pointer.x, y: pointer.y});
-                console.log(points);
-            }
-        });
-
-
-    });
+    //    $(document).ready(function () {
+    //        var canvas = new fabric.Canvas('c'),
+    //            drawing = false,
+    //            points = [];
+    //        canvas.setHeight(500);
+    //        canvas.setWidth(500);
+    //        $('#draw').click(function () {
+    //            canvas.isDrawingMode = !canvas.isDrawingMode;
+    //        });
+    //        var start_x = 0, start_y = 0, end_x = 0, end_y = 0;
+    //        canvas.on('mouse:down', function (e) {
+    //            if (canvas.isDrawingMode) {
+    //                drawing = true;
+    //                var pointer = canvas.getPointer(e.e);
+    //                start_x = pointer.x;
+    //                start_y = pointer.y;
+    //            }
+    //        });
+    //        canvas.on('mouse:move', function(e) {
+    //            if (drawing) {
+    //                var pointer = canvas.getPointer(e.e);
+    //                points.push({x: pointer.x, y: pointer.y})
+    //            }
+    //        });
+    //        canvas.on('mouse:up', function (e) {
+    //            if (canvas.isDrawingMode) {
+    //                drawing = false;
+    //                var pointer = canvas.getPointer(e.e);
+    //                end_x = pointer.x;
+    //                end_y = pointer.y;
+    //                var line = new fabric.Line([start_x, start_y, end_x, end_y], {
+    //                    stroke: 'black'
+    //                });
+    //                canvas.add(line);
+    //                points.push({x: pointer.x, y: pointer.y});
+    //                console.log(points);
+    //            }
+    //        });
+    //
+    //
+    //    });
     var map;
     function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
             center: {lat: 35.628956, lng: 139.738907},
-            zoom: 15
+            zoom: 15,
+            draggable: false,
         });
+
+        poly = new google.maps.Polyline({
+            strokeColor: '#000000',
+            strokeOpacity: 1.0,
+            strokeWeight: 3
+        });
+        poly.setMap(map);
+
+        map.addListener('mousedown', startDrawing);
+        map.addListener('mousemove', addLatLng);
+        poly.addListener('mouseup', endDrawing);
+    }
+
+    var startLatLng,
+        drawing = false;
+    function startDrawing(event) {
+        startLatLng = event.latLng;
+        drawing = true;
+    }
+    // Handles click events on a map, and adds a new point to the Polyline.
+    function addLatLng(event) {
+        if (drawing) {
+            var path = poly.getPath();
+            path.push(event.latLng);
+        }
+    }
+    function endDrawing(event) {
+        drawing = false;
+        var path = poly.getPath();
+        path.push(startLatLng);
     }
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key={{ key }}&callback=initMap" async defer></script>
