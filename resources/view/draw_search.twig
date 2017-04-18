@@ -5,7 +5,6 @@
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
     <style>
-        /* Optional: Makes the sample page fill the window. */
         html, body {
             height: 100%;
             margin: 0;
@@ -13,83 +12,60 @@
         }
 
         #map {
-            height: 500px;
-            width: 500px;
+            height: 100%;
         }
     </style>
 </head>
 <body>
 <div id="map"></div>
-<canvas id="c" style="border:1px solid;"></canvas>
 <button id="draw">draw</button>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script type="text/javascript" src="/js/fabric.min.js"></script>
+
 <script type="text/javascript">
-    //    $(document).ready(function () {
-    //        var canvas = new fabric.Canvas('c'),
-    //            drawing = false,
-    //            points = [];
-    //        canvas.setHeight(500);
-    //        canvas.setWidth(500);
-    //        $('#draw').click(function () {
-    //            canvas.isDrawingMode = !canvas.isDrawingMode;
-    //        });
-    //        var start_x = 0, start_y = 0, end_x = 0, end_y = 0;
-    //        canvas.on('mouse:down', function (e) {
-    //            if (canvas.isDrawingMode) {
-    //                drawing = true;
-    //                var pointer = canvas.getPointer(e.e);
-    //                start_x = pointer.x;
-    //                start_y = pointer.y;
-    //            }
-    //        });
-    //        canvas.on('mouse:move', function(e) {
-    //            if (drawing) {
-    //                var pointer = canvas.getPointer(e.e);
-    //                points.push({x: pointer.x, y: pointer.y})
-    //            }
-    //        });
-    //        canvas.on('mouse:up', function (e) {
-    //            if (canvas.isDrawingMode) {
-    //                drawing = false;
-    //                var pointer = canvas.getPointer(e.e);
-    //                end_x = pointer.x;
-    //                end_y = pointer.y;
-    //                var line = new fabric.Line([start_x, start_y, end_x, end_y], {
-    //                    stroke: 'black'
-    //                });
-    //                canvas.add(line);
-    //                points.push({x: pointer.x, y: pointer.y});
-    //                console.log(points);
-    //            }
-    //        });
-    //
-    //
-    //    });
-    var map;
+    var map,
+        startLatLng,
+        drawing = false,
+        poly,
+        markers = [];
+
     function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
             center: {lat: 35.628956, lng: 139.738907},
             zoom: 15,
             draggable: false,
+            clickableIcons: false
         });
 
+        for (var i = 0; i < 10000; i++) {
+            randomMarker();
+        }
+
+        map.addListener('mousedown', startDrawing);
+        map.addListener('mousemove', addLatLng);
+        map.addListener('mouseup', endDrawing);
+    }
+
+    function randomMarker() {
+        var lat = 35.0 + Math.random(),
+            lng = 139.0 + Math.random(),
+            marker = new google.maps.Marker({
+                position: new google.maps.LatLng(lat, lng),
+                map: map
+            });
+        markers.push(marker);
+    }
+
+    function startDrawing(event) {
         poly = new google.maps.Polyline({
             strokeColor: '#000000',
             strokeOpacity: 1.0,
             strokeWeight: 3
         });
         poly.setMap(map);
-
-        map.addListener('mousedown', startDrawing);
-        map.addListener('mousemove', addLatLng);
         poly.addListener('mouseup', endDrawing);
-    }
 
-    var startLatLng,
-        drawing = false;
-    function startDrawing(event) {
         startLatLng = event.latLng;
+        var path = poly.getPath();
+        path.push(startLatLng);
         drawing = true;
     }
     // Handles click events on a map, and adds a new point to the Polyline.
