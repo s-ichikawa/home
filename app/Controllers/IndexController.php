@@ -16,7 +16,7 @@ class IndexController extends Controller
     {
         echo 'Yes POST';
     }
-    
+
     public function delete()
     {
         echo __FUNCTION__;

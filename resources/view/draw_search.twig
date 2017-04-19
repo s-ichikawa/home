@@ -23,19 +23,19 @@
 <script type="text/javascript">
     var map,
         startLatLng,
-        drawing = false,
-        poly,
+        isDrawing = false,
+        polyline,
         markers = [];
 
     function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
             center: {lat: 35.628956, lng: 139.738907},
-            zoom: 15,
+            zoom: 14,
             draggable: false,
             clickableIcons: false
         });
 
-        for (var i = 0; i < 10000; i++) {
+        for (var i = 0; i < 100; i++) {
             randomMarker();
         }
 
@@ -45,8 +45,8 @@
     }
 
     function randomMarker() {
-        var lat = 35.0 + Math.random(),
-            lng = 139.0 + Math.random(),
+        var lat = 35.56 + (Math.random() / 10),
+            lng = 139.69 + (Math.random() / 10),
             marker = new google.maps.Marker({
                 position: new google.maps.LatLng(lat, lng),
                 map: map
@@ -55,30 +55,36 @@
     }
 
     function startDrawing(event) {
-        poly = new google.maps.Polyline({
-            strokeColor: '#000000',
-            strokeOpacity: 1.0,
-            strokeWeight: 3
-        });
-        poly.setMap(map);
-        poly.addListener('mouseup', endDrawing);
+        for (var i = 0; i < markers.length; i++) {
+            markers[i].setMap(map);
+        }
+        if (polyline) {
+            polyline.setMap(null);
+        }
+        polyline = new google.maps.Polyline();
+        polyline.setMap(map);
+        polyline.addListener('mouseup', endDrawing);
 
         startLatLng = event.latLng;
-        var path = poly.getPath();
-        path.push(startLatLng);
-        drawing = true;
+        polyline.getPath().push(startLatLng);
+        isDrawing = true;
     }
-    // Handles click events on a map, and adds a new point to the Polyline.
     function addLatLng(event) {
-        if (drawing) {
-            var path = poly.getPath();
-            path.push(event.latLng);
+        if (isDrawing) {
+            polyline.getPath().push(event.latLng);
         }
     }
     function endDrawing(event) {
-        drawing = false;
-        var path = poly.getPath();
-        path.push(startLatLng);
+        isDrawing = false;
+        polyline.getPath().push(startLatLng);
+
+        var polygon = new google.maps.Polygon({paths: polyline.getPath()});
+        for (var i = 0; i < markers.length; i++) {
+            if (!google.maps.geometry.poly.containsLocation(markers[i].getPosition(), polygon)) {
+                markers[i].setMap(null);
+            }
+
+        }
     }
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key={{ key }}&callback=initMap" async defer></script>
