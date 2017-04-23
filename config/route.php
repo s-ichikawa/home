@@ -7,6 +7,3 @@ add_get('draw_search', \Sichikawa\Home\App\Controllers\IndexController::class, '
 
 add_post('controller', \Sichikawa\Home\App\Controllers\IndexController::class);
 
-add_get('test', function () {
-    echo __FUNCTION__;
-});
