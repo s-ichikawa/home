@@ -4,6 +4,15 @@ class HashTable
 {
     private $data = [];
 
+    /**
+     * HashTable constructor.
+     */
+    public function __construct()
+    {
+        $this->data = new SplFixedArray(5);
+    }
+
+
     public function add($str)
     {
         $this->data[md5($str)] = $str;
