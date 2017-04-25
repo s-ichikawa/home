@@ -13,7 +13,7 @@ class ArrayList
      * ArrayList constructor.
      * @param int $size
      */
-    public function __construct($size = 5)
+    public function __construct($size = 1)
     {
         $this->initData($size);
     }
@@ -29,7 +29,7 @@ class ArrayList
     public function add($value)
     {
         if ($this->data->getSize() == self::$index) {
-            $this->initData($this->data->getSize() * 2, $this->data);
+            $this->initData($this->data->getSize() + 1, $this->data);
         }
         $this->data->offsetSet(self::$index++, $value);
     }
