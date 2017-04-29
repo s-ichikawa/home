@@ -43,7 +43,7 @@ foreach ($data->packageNames as $packageName) {
         foreach($contents as $content) {
             if (preg_match('/readme/i', $content->name)) {
                 $readme = $client->get($content->download_url)->getBody()->getContents();
-                preg_match_all('/\[\!\[(.*)\]\((.*)\)\]\((.*)\)/', $readme, $matches);
+                preg_match_all('/\[\!\[(.*?)\]\((.*?)\)\]\((.*?)\)/', $readme, $matches);
                 var_dump($matches);
                 $i++;
                 break;
