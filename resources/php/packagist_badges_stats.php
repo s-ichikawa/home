@@ -30,11 +30,16 @@ foreach ($data->packageNames as $packageName) {
     $res = $client->get($source_url);
     $package = json_decode($res->getBody()->getContents())->package;
     if (strpos($package->repository, 'github.com')) {
-        $contents_url = str_replace('github.com/', 'api.github.com/repos/', $package->repository) . '/contents';
-        $res = $client
-            ->get($contents_url)
-            ->getBody();
-        $contents = json_decode($res);
+        try {
+            $contents_url = str_replace('github.com/', 'api.github.com/repos/', $package->repository) . '/contents';
+            $res = $client
+                ->get($contents_url)
+                ->getBody();
+            $contents = json_decode($res);
+        } catch (\GuzzleHttp\Exception\ClientException $exception) {
+            continue;
+        }
+
         foreach($contents as $content) {
             if (preg_match('/readme/i', $content->name)) {
                 $readme = $client->get($content->download_url)->getBody()->getContents();
