@@ -26,6 +26,7 @@ $i = 0;
 foreach ($data->packageNames as $packageName) {
 
     $source_url = sprintf('https://packagist.org/packages/%s.json', $packageName);
+    echo $source_url . PHP_EOL;
     $res = $client->get($source_url);
     $package = json_decode($res->getBody()->getContents())->package;
     if (strpos($package->repository, 'github.com')) {
