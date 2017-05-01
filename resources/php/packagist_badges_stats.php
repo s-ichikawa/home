@@ -3,6 +3,11 @@ use GuzzleHttp\Client;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
+$env = require __DIR__ . '/../../.env.php';
+
+$id = $env['GITHUB_ID'];
+$secret = $env['GITHUB_PASSWD'];
+
 $cache_path = __DIR__ . '/list.json';
 
 if (file_exists($cache_path) === false) {
@@ -26,17 +31,18 @@ $i = 0;
 foreach ($data->packageNames as $packageName) {
 
     $source_url = sprintf('https://packagist.org/packages/%s.json', $packageName);
-    echo $source_url . PHP_EOL;
+    echo $i . ': ' . $source_url . PHP_EOL;
     $res = $client->get($source_url);
     $package = json_decode($res->getBody()->getContents())->package;
     if (strpos($package->repository, 'github.com')) {
         try {
-            $contents_url = str_replace('github.com/', 'api.github.com/repos/', $package->repository) . '/contents';
+            $contents_url = str_replace('github.com/', 'api.github.com/repos/', $package->repository) . '/contents?client_id=' . $id . '&client_secret=' . $secret;
             $res = $client
                 ->get($contents_url)
                 ->getBody();
             $contents = json_decode($res);
         } catch (\GuzzleHttp\Exception\ClientException $exception) {
+            echo $exception . PHP_EOL;
             continue;
         }
 
@@ -51,9 +57,6 @@ foreach ($data->packageNames as $packageName) {
         }
     } else {
         echo 'unknown repository. => ' . $package->repository;
-    }
-    if ($i > 20) {
-        break;
     }
 }
 
