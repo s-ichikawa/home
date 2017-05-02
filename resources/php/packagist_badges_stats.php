@@ -8,20 +8,20 @@ $env = require __DIR__ . '/../../.env.php';
 $id = $env['GITHUB_ID'];
 $secret = $env['GITHUB_PASSWD'];
 
-$cache_path = __DIR__ . '/list.json';
-
-if (file_exists($cache_path) === false) {
-    touch($cache_path);
+$redis = new Redis();
+$redis->connect('127.0.0.1');
+if (!$redis->ping()) {
+    throw new Exception('Redis cant connect.');
 }
 
+
 $client = new Client();
-$json = file_get_contents($cache_path);
-if (empty($json)) {
+if (!$json = $redis->get('list_json')) {
     $response = $client->get('https://packagist.org/packages/list.json');
 
     if ($response) {
         $json = $response->getBody()->getContents();
-        file_put_contents($cache_path, $json);
+        $redis->set('list_json', $json);
     }
     echo 'request succeeded.' . PHP_EOL;
 }
