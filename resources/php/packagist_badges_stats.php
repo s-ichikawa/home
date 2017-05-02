@@ -30,6 +30,9 @@ $data = json_decode($json);
 $i = 0;
 foreach ($data->packageNames as $packageName) {
 
+    // test
+    $packageName = '0100dev/cakephp-rabbitmq';
+
     $source_url = sprintf('https://packagist.org/packages/%s.json', $packageName);
     echo $i . ': ' . $source_url . PHP_EOL;
     $res = $client->get($source_url);
@@ -46,15 +49,26 @@ foreach ($data->packageNames as $packageName) {
             continue;
         }
 
-        foreach($contents as $content) {
+        foreach ($contents as $content) {
             if (preg_match('/readme/i', $content->name)) {
                 $readme = $client->get($content->download_url)->getBody()->getContents();
                 preg_match_all('/\[\!\[(.*?)\]\((.*?)\)\]\((.*?)\)/', $readme, $matches);
-                var_dump($matches);
+
+                $badges = $matches[2];
+                $services = $matches[3];
+                $count = count($badges);
+                for ($j = 0; $j < $count; $j++) {
+                    $badge = str_replace($package->repository, 'user/repo', $badges[$j]);
+                    $service = str_replace($package->repository, 'user/repo', $services[$j]);
+
+                    var_dump($badge, $service);
+                }
+
                 $i++;
                 break;
             }
         }
+        break;
     } else {
         echo 'unknown repository. => ' . $package->repository;
     }
