@@ -4,8 +4,8 @@ namespace Packagist\Stats;
 
 use Exception;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\RequestException;
+use function GuzzleHttp\Psr7\str;
 use Redis;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
@@ -117,8 +117,11 @@ class Github
             }
 
             return json_decode($json);
-        } catch (ClientException $exception) {
-            echo $exception . PHP_EOL;
+        } catch (RequestException $exception) {
+            echo str($exception->getRequest());
+            if ($exception->hasResponse()) {
+                echo str($exception->getResponse());
+            }
         }
         return null;
     }
@@ -127,8 +130,11 @@ class Github
     {
         try {
             return $this->client->get($url)->getBody()->getContents();
-        } catch (ConnectException $exception) {
-            echo $exception . PHP_EOL;
+        } catch (RequestException $exception) {
+            echo str($exception->getRequest());
+            if ($exception->hasResponse()) {
+                echo str($exception->getResponse());
+            }
         }
         return null;
     }
