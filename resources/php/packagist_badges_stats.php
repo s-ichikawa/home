@@ -183,7 +183,7 @@ foreach ($packagist->getPackageNames() as $packageName) {
                     break;
                 }
                 foreach (getBadges($package->repository, $readme) as $badge) {
-                    var_dump($badge);
+                    var_dump(basename(parse_url($badge['badge'])['path']), parse_url($badge['service'])['host']);
                 }
                 break;
             }
