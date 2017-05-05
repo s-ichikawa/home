@@ -148,8 +148,11 @@ function getBadges($repository, $readme)
     $services = $matches[3];
     $count = count($badges);
     for ($j = 0; $j < $count; $j++) {
-        $badge = str_replace($repository, 'user/repo', $badges[$j]);
-        $service = str_replace($repository, 'user/repo', $services[$j]);
+        $path = parse_url($repository)['path'];
+
+
+        $badge = str_replace($path, '/user/repo', $badges[$j]);
+        $service = str_replace($path, '/user/repo', $services[$j]);
 
         yield [
             'badge'   => $badge,
@@ -183,7 +186,9 @@ foreach ($packagist->getPackageNames() as $packageName) {
                     break;
                 }
                 foreach (getBadges($package->repository, $readme) as $badge) {
-                    var_dump(basename(parse_url($badge['badge'])['path']), parse_url($badge['service'])['host']);
+                    $badge_name = parse_url($badge['badge']);
+                    echo '    badge: ' . $badge_name['host'] . $badge_name['path'] . PHP_EOL;
+                    echo '    service: ' . (parse_url($badge['service'])['host'] ?? $badge['service']) . PHP_EOL;
                 }
                 break;
             }
