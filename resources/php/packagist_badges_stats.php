@@ -172,8 +172,6 @@ $redis = Cache::getInstance();
 $i = 0;
 foreach ($packagist->getPackageNames() as $packageName) {
     echo ++$i . ':' . $packageName . PHP_EOL;
-    // test
-//    $packageName = '0100dev/cakephp-rabbitmq';
 
     if (!$package = $packagist->getPackage($packageName)) {
         echo 'no package.';
