@@ -43,6 +43,11 @@ class Cache
     {
         return $this->redis->set($key, $val);
     }
+
+    public function incr($key, $member)
+    {
+        $this->redis->zIncrBy($key, 1, $member);
+    }
 }
 
 class Packagist
@@ -163,6 +168,7 @@ function getBadges($repository, $readme)
 
 $packagist = new Packagist();
 $github = new Github();
+$redis = Cache::getInstance();
 $i = 0;
 foreach ($packagist->getPackageNames() as $packageName) {
     echo ++$i . ':' . $packageName . PHP_EOL;
@@ -185,10 +191,18 @@ foreach ($packagist->getPackageNames() as $packageName) {
                 if (!$readme = $github->download($content->download_url)) {
                     break;
                 }
+                $services = [];
                 foreach (getBadges($package->repository, $readme) as $badge) {
                     $badge_name = parse_url($badge['badge']);
+                    $redis->incr('badge', $badge_name['host'] . $badge_name['path']);
                     echo '    badge: ' . $badge_name['host'] . $badge_name['path'] . PHP_EOL;
-                    echo '    service: ' . (parse_url($badge['service'])['host'] ?? $badge['service']) . PHP_EOL;
+
+                    $service_name = (parse_url($badge['service'])['host'] ?? $badge['service']);
+                    if (!in_array($service_name, $services)) {
+                        $redis->incr('service', $service_name);
+                        $services[] = $service_name;
+                        echo '    service: ' . (parse_url($badge['service'])['host'] ?? $badge['service']) . PHP_EOL;
+                    }
                 }
                 break;
             }
