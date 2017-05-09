@@ -136,8 +136,6 @@ $pool2 = new Pool($client, $getRepositoryUrls(), [
     'fulfilled'   => function (ResponseInterface $response, $index) {
         $json = $response->getBody()->getContents();
 
-        var_dump(json_decode($json));
-        exit();
         foreach (json_decode($json) as $file) {
             if (preg_match('/readme/i', $file->name)) {
                 $cache_key = getReadMeCacheKey($file->html_url);
