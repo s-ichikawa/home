@@ -4,6 +4,7 @@ namespace Packagist\Stats;
 
 use Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Pool;
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Message\ResponseInterface;
@@ -132,7 +133,7 @@ $getRepositoryUrls = function () {
 };
 
 $pool2 = new Pool($client, $getRepositoryUrls(), [
-    'concurrency' => 100,
+    'concurrency' => 2,
     'fulfilled'   => function (ResponseInterface $response, $index) {
         $json = $response->getBody()->getContents();
 
@@ -145,9 +146,11 @@ $pool2 = new Pool($client, $getRepositoryUrls(), [
             }
         }
     },
-    'reject'      => function ($reason, $index) {
+    'rejected'      => function ($reason, $index) {
         echo $reason . PHP_EOL;
-        exit();
+        if ($reason instanceof ClientException && $reason->getResponse()->getStatusCode() == 403) {
+            sleep(60);
+        }
     },
 ]);
 $pool2->promise()->wait();
