@@ -133,7 +133,7 @@ $getRepositoryUrls = function () {
 };
 
 $pool2 = new Pool($client, $getRepositoryUrls(), [
-    'concurrency' => 2,
+    'concurrency' => 5,
     'fulfilled'   => function (ResponseInterface $response, $index) {
         $json = $response->getBody()->getContents();
 
@@ -149,7 +149,8 @@ $pool2 = new Pool($client, $getRepositoryUrls(), [
     'rejected'      => function ($reason, $index) {
         echo $reason . PHP_EOL;
         if ($reason instanceof ClientException && $reason->getResponse()->getStatusCode() == 403) {
-            sleep(60);
+            echo 'rate limit!!' . PHP_EOL;
+            exit();
         }
     },
 ]);
