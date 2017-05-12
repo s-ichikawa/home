@@ -127,7 +127,7 @@ $getRepositoryUrls = function () {
         }
         echo str_replace('github.com/', 'api.github.com/repos/', $repository)
             . '/contents?client_id=' . $id . '&client_secret=' . $secret . PHP_EOL;
-        yield new Request('GET', str_replace('github.com/', 'api.github.com/repos/', $repository)
+        yield new Request('GET', str_replace('github.com/', 'api.github.com/repos/', $repository)git
             . '/contents?client_id=' . $id . '&client_secret=' . $secret);
     }
 };
