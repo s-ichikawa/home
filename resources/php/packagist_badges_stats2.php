@@ -12,6 +12,11 @@ use Redis;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
+//$redis = new Redis();
+//$redis->connect('127.0.0.1');
+//$keys = $redis->keys('github::readme::*');
+//var_dump(count($keys));
+//exit();
 class RedisCli
 {
     /**
@@ -127,13 +132,13 @@ $getRepositoryUrls = function () {
         }
         echo str_replace('github.com/', 'api.github.com/repos/', $repository)
             . '/contents?client_id=' . $id . '&client_secret=' . $secret . PHP_EOL;
-        yield new Request('GET', str_replace('github.com/', 'api.github.com/repos/', $repository)git
+        yield new Request('GET', str_replace('github.com/', 'api.github.com/repos/', $repository)
             . '/contents?client_id=' . $id . '&client_secret=' . $secret);
     }
 };
 
 $pool2 = new Pool($client, $getRepositoryUrls(), [
-    'concurrency' => 5,
+    'concurrency' => 2,
     'fulfilled'   => function (ResponseInterface $response, $index) {
         $json = $response->getBody()->getContents();
 
