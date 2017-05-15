@@ -122,8 +122,8 @@ $getRepositoryUrls = function () {
     $secret = $env['GITHUB_PASSWD'];
 
     $packageNames = RedisCli::keys(PACKAGIST_PACKAGE . '*');
-    foreach ($packageNames as $name) {
-        $package = json_decode(RedisCli::get($name))->package;
+    foreach ($packageNames as $packageName) {
+        $package = json_decode(RedisCli::get($packageName))->package;
         $repository = $package->repository;
         if (!strpos($repository, 'github.com')) {
             echo 'unknown repository. => ' . $repository . PHP_EOL;
@@ -132,7 +132,7 @@ $getRepositoryUrls = function () {
 
         $cache_key = getReadMeCacheKey($repository);
         if (RedisCli::get($cache_key)) {
-            RedisCli::del($cache_key);
+            RedisCli::del($packageName);
             continue;
         }
         echo str_replace('github.com/', 'api.github.com/repos/', $repository)
@@ -163,8 +163,9 @@ $pool2 = new Pool($client, $getRepositoryUrls(), [
 
             var_dump($reason->getResponse()->getStatusCode(), $reason->getRequest()->getUri());
             echo 'rate limit!!' . PHP_EOL;
-            $keys = RedisCli::keys('github::readme::*');
-            var_dump(count($keys));
+            $keys = RedisCli::keys(GITHUB_README . '*');
+            $package_keys = RedisCli::keys(PACKAGIST_PACKAGE . '*');
+            var_dump(count($keys), count($package_keys));
             exit();
         }
     },
