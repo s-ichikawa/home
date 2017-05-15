@@ -59,6 +59,11 @@ class RedisCli
     {
         self::getInstance()->redis->zIncrBy($key, 1, $member);
     }
+
+    public static function del($key)
+    {
+        self::getInstance()->redis->del($key);
+    }
 }
 
 const PACKAGIST_PACKAGE = 'packagist::package::';
@@ -127,7 +132,7 @@ $getRepositoryUrls = function () {
 
         $cache_key = getReadMeCacheKey($repository);
         if (RedisCli::get($cache_key)) {
-            echo $cache_key . ': exists.' . PHP_EOL;
+            RedisCli::del($cache_key);
             continue;
         }
         echo str_replace('github.com/', 'api.github.com/repos/', $repository)
@@ -151,10 +156,15 @@ $pool2 = new Pool($client, $getRepositoryUrls(), [
             }
         }
     },
-    'rejected'      => function ($reason, $index) {
-        echo $reason . PHP_EOL;
+    'rejected'    => function ($reason, $index) {
+//        echo $reason . PHP_EOL;
         if ($reason instanceof ClientException && $reason->getResponse()->getStatusCode() == 403) {
+
+
+            var_dump($reason->getResponse()->getStatusCode(), $reason->getRequest()->getUri());
             echo 'rate limit!!' . PHP_EOL;
+            $keys = RedisCli::keys('github::readme::*');
+            var_dump(count($keys));
             exit();
         }
     },
