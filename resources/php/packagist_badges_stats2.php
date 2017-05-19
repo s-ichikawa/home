@@ -135,8 +135,7 @@ $getRepositoryUrls = function () {
             RedisCli::del($packageName);
             continue;
         }
-        echo str_replace('github.com/', 'api.github.com/repos/', $repository)
-            . '/contents?client_id=' . $id . '&client_secret=' . $secret . PHP_EOL;
+        echo str_replace('github.com/', 'api.github.com/repos/', $repository) . '/contents';
         yield new Request('GET', str_replace('github.com/', 'api.github.com/repos/', $repository)
             . '/contents?client_id=' . $id . '&client_secret=' . $secret);
     }
@@ -151,7 +150,7 @@ $pool2 = new Pool($client, $getRepositoryUrls(), [
             if (preg_match('/readme/i', $file->name)) {
                 $cache_key = getReadMeCacheKey($file->html_url);
                 RedisCli::set($cache_key, json_encode($file));
-                echo $cache_key . ': fulfilled.' . PHP_EOL;
+//                echo $cache_key . ': fulfilled.' . PHP_EOL;
                 break;
             }
         }
