@@ -127,6 +127,7 @@ $getRepositoryUrls = function () {
         $repository = $package->repository;
         if (!strpos($repository, 'github.com')) {
             echo 'unknown repository. => ' . $repository . PHP_EOL;
+            RedisCli::del($packageName);
             continue;
         }
 
@@ -135,9 +136,11 @@ $getRepositoryUrls = function () {
             RedisCli::del($packageName);
             continue;
         }
-        echo str_replace('github.com/', 'api.github.com/repos/', $repository) . '/contents';
-        yield new Request('GET', str_replace('github.com/', 'api.github.com/repos/', $repository)
-            . '/contents?client_id=' . $id . '&client_secret=' . $secret);
+
+        $url = str_replace('github.com/', 'api.github.com/repos/', $repository) . '/contents';
+        echo $url . PHP_EOL;
+        yield new Request('GET', $url . '?client_id=' . $id . '&client_secret=' . $secret);
+        RedisCli::del($packageName);
     }
 };
 
