@@ -123,24 +123,23 @@ $getRepositoryUrls = function () {
 
     $packageNames = RedisCli::keys(PACKAGIST_PACKAGE . '*');
     foreach ($packageNames as $packageName) {
-        $package = json_decode(RedisCli::get($packageName))->package;
+        $json = RedisCli::get($packageName);
+        RedisCli::del($packageName);
+        $package = json_decode($json)->package;
         $repository = $package->repository;
         if (!strpos($repository, 'github.com')) {
             echo 'unknown repository. => ' . $repository . PHP_EOL;
-            RedisCli::del($packageName);
             continue;
         }
 
         $cache_key = getReadMeCacheKey($repository);
         if (RedisCli::get($cache_key)) {
-            RedisCli::del($packageName);
             continue;
         }
 
         $url = str_replace('github.com/', 'api.github.com/repos/', $repository) . '/contents';
         echo $url . PHP_EOL;
         yield new Request('GET', $url . '?client_id=' . $id . '&client_secret=' . $secret);
-        RedisCli::del($packageName);
     }
 };
 
