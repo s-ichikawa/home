@@ -89,6 +89,9 @@ function getBadges($repository, $readme)
     }
 }
 
+RedisCli::del('badge:*');
+RedisCli::del('service:*');
+
 $client = new Client();
 $services = [];
 foreach (getUrls() as $url) {
