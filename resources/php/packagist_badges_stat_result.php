@@ -95,6 +95,7 @@ RedisCli::del('service:*');
 $client = new Client();
 $services = [];
 foreach (getUrls() as $url) {
+    echo ++$i . ':' . PHP_EOL;
 
     $promise = $client->requestAsync('GET', $url)
         ->then(function (ResponseInterface $response) use ($url, $services) {
